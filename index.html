@@ -1,0 +1,138 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Phone Display</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .lock-screen {
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        }
+        .unlock {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="relative w-72 h-[576px] bg-black rounded-[50px] overflow-hidden shadow-lg border-8 border-black">
+        <!-- Pantalla de bloqueo -->
+        <div id="lockScreen" class="absolute inset-0 flex items-end justify-center lock-screen">
+            <img src="fondo_block.png" alt="Lock screen background" class="absolute inset-0 w-full h-full object-cover">
+            <div class="absolute top-1/4 w-full text-center text-white">
+                <div class="text-4xl font-bold" id="time">12:00</div>
+                <div class="text-xl" id="date">Monday, January 1</div>
+            </div>
+            <div id="unlockBar" class="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-[84px] h-2 bg-black rounded-full cursor-pointer"></div>
+        </div>
+        
+        <!-- Fondo del teléfono -->
+        <img id="phoneBackground" src="fondo.png" alt="Phone background" class="absolute inset-0 w-full h-full object-cover hidden">
+        <div class="absolute top-2 left-1/2 transform -translate-x-1/2 w-20 h-6 bg-black rounded-full"></div>
+        <div id="bottomBar" class="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-[84px] h-2 bg-black rounded-full hidden"></div>
+
+        <!-- Iconos de las aplicaciones -->
+        <div id="appContainer" class="hidden fade-in">
+            <div class="absolute top-20 left-8">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center">
+                    <img src="instagram.png" alt="Instagram" class="w-full h-full object-contain"/>
+                </div>
+                <p class="text-center text-white text-sm mt-1">Instagram</p>
+            </div>
+            <div class="absolute top-20 left-28">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center">
+                    <img src="tiktok.png" alt="TikTok" class="w-full h-full object-contain"/>
+                </div>
+                <p class="text-center text-white text-sm mt-1">TikTok</p>
+            </div>
+            <div class="absolute top-20 left-48">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center">
+                    <img src="whatsapp.png" alt="WhatsApp" class="w-full h-full object-contain"/>
+                </div>
+                <p class="text-center text-white text-sm mt-1">WhatsApp</p>
+            </div>
+            <div class="absolute top-40 left-8">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center">
+                    <img src="youtube.png" alt="YouTube" class="w-full h-full object-contain"/>
+                </div>
+                <p class="text-center text-white text-sm mt-1">YouTube</p>
+            </div>
+            <div class="absolute top-40 left-28">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center">
+                    <img src="facebook.png" alt="Facebook" class="w-full h-full object-contain"/>
+                </div>
+                <p class="text-center text-white text-sm mt-1">Facebook</p>
+            </div>
+            <div class="absolute top-40 left-48">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center">
+                    <img src="twitter.png" alt="Twitter" class="w-full h-full object-contain"/>
+                </div>
+                <p class="text-center text-white text-sm mt-1">Twitter</p>
+            </div>
+            <div class="absolute top-60 left-8">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center">
+                    <img src="snapchat.png" alt="Snapchat" class="w-full h-full object-contain"/>
+                </div>
+                <p class="text-center text-white text-sm mt-1">Snapchat</p>
+            </div>
+            <div class="absolute top-60 left-28">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center">
+                    <img src="linkedin.png" alt="LinkedIn" class="w-full h-full object-contain"/>
+                </div>
+                <p class="text-center text-white text-sm mt-1">LinkedIn</p>
+            </div>
+            <div class="absolute top-60 left-48">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center">
+                    <img src="messenger.png" alt="Messenger" class="w-full h-full object-contain"/>
+                </div>
+                <p class="text-center text-white text-sm mt-1">Messenger</p>
+            </div>
+            <div class="absolute top-80 left-8">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center">
+                    <img src="spotify.png" alt="Spotify" class="w-full h-full object-contain"/>
+                </div>
+                <p class="text-center text-white text-sm mt-1">Spotify</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        let unlockBar = document.getElementById("unlockBar");
+        let lockScreen = document.getElementById("lockScreen");
+        let phoneBackground = document.getElementById("phoneBackground");
+        let appContainer = document.getElementById("appContainer");
+        let bottomBar = document.getElementById("bottomBar");
+        
+        unlockBar.addEventListener("mousedown", function() {
+            lockScreen.style.transform = "translateY(-100%)";
+            setTimeout(() => {
+                lockScreen.classList.add("unlock");
+                phoneBackground.classList.remove("hidden");
+                appContainer.classList.remove("hidden");
+                bottomBar.classList.remove("hidden");
+            }, 300);
+        });
+
+        // Update time and date
+        function updateTimeAndDate() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const timeString = `${hours}:${minutes}`;
+            const dateString = now.toLocaleDateString('es-ES', { weekday: 'long', month: 'long', day: 'numeric' });
+
+            document.getElementById('time').textContent = timeString;
+            document.getElementById('date').textContent = dateString;
+        }
+
+        setInterval(updateTimeAndDate, 1000);
+        updateTimeAndDate();
+    </script>
+</body>
+</html>
